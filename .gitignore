@@ -41,3 +41,4 @@ build/
 bin/
 lib/
 third-party/
+include/Nevermore/Config.h
