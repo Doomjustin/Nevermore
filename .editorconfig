@@ -1,0 +1,9 @@
+# top-most EditorConfig file
+root = true
+
+
+# all files
+[*]
+indent_style = tab
+# 网页上方便观看
+indent_size = 2
