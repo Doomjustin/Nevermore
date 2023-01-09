@@ -1,0 +1,17 @@
+#ifndef NEVERMORE_CONFIG_H
+#define NEVERMORE_CONFIG_H
+
+
+namespace SF {
+
+constexpr static bool kIsUnix = @SF_IS_UNIX@;
+constexpr static bool kIsWindows = @SF_IS_WIN32@;
+constexpr static bool kIsApple = @SF_IS_APPLE@;
+
+#define @SF_PLATFORM@
+
+constexpr static const char* kProjectDir = "@SF_PROJECT_DIR@/";
+
+} // namespace SF
+
+#endif // NEVERMORE_CONFIG_H
