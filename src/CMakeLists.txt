@@ -25,19 +25,21 @@ configure_file(
 )
 
 add_library(NevermoreCore
-    INTERFACE
+    STATIC
         ${SF_INTERNAL_INCLUDE_DIR}/Config.h
         ${SF_INTERNAL_INCLUDE_DIR}/Utility.h
+        ${SF_INTERNAL_INCLUDE_DIR}/FunctionWrapper.h
+        ${SF_INTERNAL_INCLUDE_DIR}/ThreadPool.h
+        ThreadPool.cpp
 )
 
 add_library(Nevermore::Core ALIAS NevermoreCore)
 
-target_include_directories(NevermoreCore INTERFACE ${SF_INTERNAL_INCLUDE_DIR})
-# TODO: change visible to PRIVATE
-target_include_directories(NevermoreCore INTERFACE ${SF_PUBLIC_INCLUDE_DIR})
+target_include_directories(NevermoreCore PRIVATE ${SF_INTERNAL_INCLUDE_DIR})
+target_include_directories(NevermoreCore PUBLIC ${SF_PUBLIC_INCLUDE_DIR})
 
 target_link_libraries(NevermoreCore
-    INTERFACE
+    PRIVATE
         fmt::fmt
         spdlog::spdlog
 )
