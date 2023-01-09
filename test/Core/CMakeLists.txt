@@ -24,6 +24,8 @@ function(sf_add_core_test_without_catch2 target source)
     target_link_libraries(${target} 
         PRIVATE 
             Nevermore::Core
+            spdlog::spdlog
+            fmt::fmt
     )
 endfunction()
 
@@ -32,3 +34,4 @@ sf_add_core_test(test-utility test_utility.cpp)
 
 
 sf_add_core_test_without_catch2(test-threadpool test_threadpool.cpp)
+sf_add_core_test_without_catch2(test-timer test_timer.cpp)
