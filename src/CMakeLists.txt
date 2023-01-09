@@ -16,11 +16,28 @@ elseif(UNIX)
 endif()
 
 set(SF_PROJECT_DIR ${PROJECT_SOURCE_DIR})
-set(SF_INTERNAL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
+set(SF_INTERNAL_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include/Nevermore)
 set(SF_PUBLIC_INCLUDE_DIR ${PROJECT_SOURCE_DIR}/include)
-set(SF_ENABLE_EXCEPTION SF_ENABLE_EXCEPTION)
 
 configure_file(
     Config.h.in
     ${PROJECT_SOURCE_DIR}/include/Nevermore/Config.h
+)
+
+add_library(NevermoreCore
+    INTERFACE
+        ${SF_INTERNAL_INCLUDE_DIR}/Config.h
+        ${SF_INTERNAL_INCLUDE_DIR}/Utility.h
+)
+
+add_library(Nevermore::Core ALIAS NevermoreCore)
+
+target_include_directories(NevermoreCore INTERFACE ${SF_INTERNAL_INCLUDE_DIR})
+# TODO: change visible to PRIVATE
+target_include_directories(NevermoreCore INTERFACE ${SF_PUBLIC_INCLUDE_DIR})
+
+target_link_libraries(NevermoreCore
+    INTERFACE
+        fmt::fmt
+        spdlog::spdlog
 )

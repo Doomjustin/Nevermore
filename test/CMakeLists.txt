@@ -6,3 +6,5 @@ list(APPEND
 include(AddCatch2)
 include(CTest)
 include(Catch)
+
+add_subdirectory(Core)
