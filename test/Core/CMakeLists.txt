@@ -35,3 +35,4 @@ sf_add_core_test(test-utility test_utility.cpp)
 
 sf_add_core_test_without_catch2(test-threadpool test_threadpool.cpp)
 sf_add_core_test_without_catch2(test-timer test_timer.cpp)
+sf_add_core_test_without_catch2(test-posix-wrapper test_posix_wrapper.cpp)
