@@ -1,60 +1,30 @@
 #ifndef NEVERMORE_POSIX_WRAPPER_H
 #define NEVERMORE_POSIX_WRAPPER_H
 
-#include <spdlog/spdlog.h>
+#include "Nevermore/Net/ByteOrderCast.h"
 
+#include <cstddef>
+#include <spdlog/spdlog.h>
+#include <fmt/core.h>
+#include <fmt/format.h>
+
+#include <netinet/in.h>
 #include <sys/types.h>
 #include <sys/stat.h>
+#include <sys/socket.h>
 #include <fcntl.h>
 #include <unistd.h>
-#include <sys/socket.h>
+#include <arpa/inet.h>
 #include <functional>
 #include <type_traits>
 #include <utility>
 #include <system_error>
+#include <sstream>
 #include <cerrno>
 #include <cstring>
 
 
 namespace SF {
-
-namespace detail {
-
-template<size_t N>
-struct LogHelper {
-    static constexpr const char* value = "{} (...) start";
-};
-
-template<>
-struct LogHelper<0> {
-    static constexpr const char* value = "{} () start";
-};
-
-template<>
-struct LogHelper<1> {
-    static constexpr const char* value = "{} ({}) start";
-};
-
-template<>
-struct LogHelper<2> {
-    static constexpr const char* value = "{} ({}, {}) start";
-};
-
-template<>
-struct LogHelper<3> {
-    static constexpr const char* value = "{} ({}, {}, {}) start";
-};
-
-template<>
-struct LogHelper<4> {
-    static constexpr const char* value = "{} ({}, {}, {}, {}) start";
-};
-
-template<std::size_t N>
-static inline constexpr const char* log_helper_v = LogHelper<N>::value;
-
-} // namespace detail
-
 
 // Posix函数的装饰器，在执行前后打印log，并检查执行结果是否正确，如果出错，则throw exception
 template<typename>
@@ -75,15 +45,16 @@ public:
 
     R operator()(Args... args)
     {
-        if constexpr (sizeof...(Args) <= 4)
-            SPDLOG_INFO(detail::log_helper_v<sizeof...(Args)>, name_, args...);
-        else
-            SPDLOG_INFO("{} start", name_);
+        SPDLOG_INFO("{} start", name_);
 
         R result = func_(std::forward<Args>(args)...);
         check_result(result);
 
-        SPDLOG_INFO("{} end with result {}", name_, result);
+        if constexpr (std::is_pointer_v<R>)
+            SPDLOG_INFO("{} finished succeed", name_);
+        else
+            SPDLOG_INFO("{} finished with result {}", name_, result);
+
         return result;
     }
 
@@ -100,18 +71,26 @@ private:
                                      fmt::format("{} error", name_) };
         }
     }
+
+    void check_result(const char* res)
+    {
+        if (res == nullptr) {
+            SPDLOG_ERROR("{} error: {}", name_, std::strerror(errno));
+            throw std::system_error{ errno, 
+                                     std::generic_category(), 
+                                     fmt::format("{} error", name_) };
+        }
+    }
 };
 
+// 最好确保为全局唯一
 template<typename R, typename... Args>
 PosixWrapper<R(Args...)> make_posix_wrapper(R (*func)(Args...), const std::string& name)
 {
-    // 确保为全局唯一
-    static auto instance = PosixWrapper<R(Args...)>{ name, func };
-    return instance;
+    return PosixWrapper<R(Args...)>{ name, func };
 }
 
 } // namespace SF
-
 
 // 预定义的posix wrapper实例
 namespace SF::Posix {
@@ -129,6 +108,10 @@ namespace SF::Posix {
     static auto listen = make_posix_wrapper(::listen, "listen");
     static auto fork = make_posix_wrapper(::fork, "fork");
     static auto connect = make_posix_wrapper(::connect, "connect");
+    static auto inet_pton = make_posix_wrapper(::inet_pton, "inet_pton");
+    static auto inet_ntop = make_posix_wrapper(::inet_ntop, "inet_ntop");
+    static auto duplicate = make_posix_wrapper(::dup, "dup");
+    static auto dup2 = make_posix_wrapper(::dup2, "dup2");
 
 };
 
