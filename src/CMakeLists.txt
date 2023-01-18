@@ -43,3 +43,5 @@ target_link_libraries(NevermoreCore
         fmt::fmt
         spdlog::spdlog
 )
+
+add_subdirectory(Net)
