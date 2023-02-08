@@ -8,6 +8,3 @@ include(CTest)
 include(Catch)
 
 add_subdirectory(Core)
-
-add_executable(sf-test-unit test_unit.cpp)
-target_include_directories(sf-test-unit PRIVATE ${PROJECT_SOURCE_DIR}/include/)
