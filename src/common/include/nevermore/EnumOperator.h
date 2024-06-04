@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_ENUM_OPERATOR_H
-#define NEVERMORE_ENUM_OPERATOR_H
+#ifndef NEVERMORE_COMMON_ENUM_OPERATOR_H
+#define NEVERMORE_COMMON_ENUM_OPERATOR_H
 
 #include <concepts>
 #include <type_traits>
@@ -83,4 +83,4 @@ constexpr Enum& operator^=(Enum& lhs, Enum rhs) noexcept
 
 } // namespace sf::enum_operator
 
-#endif // NEVERMORE_ENUM_OPERATOR_H
+#endif // NEVERMORE_COMMON_ENUM_OPERATOR_H

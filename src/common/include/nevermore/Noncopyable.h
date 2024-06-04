@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_NONCOPYABLE_H
-#define NEVERMORE_NONCOPYABLE_H
+#ifndef NEVERMORE_COMMON_NONCOPYABLE_H
+#define NEVERMORE_COMMON_NONCOPYABLE_H
 
 namespace sf {
 
@@ -20,4 +20,4 @@ protected:
 
 } // namespace sf
 
-#endif // NEVERMORE_NONCOPYABLE_H
+#endif // NEVERMORE_COMMON_NONCOPYABLE_H

@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_SINGLETON_H
-#define NEVERMORE_SINGLETON_H
+#ifndef NEVERMORE_COMMON_SINGLETON_H
+#define NEVERMORE_COMMON_SINGLETON_H
 
 #include <type_traits>
 #include <concepts>
@@ -28,4 +28,4 @@ T& make_singleton(Args&&... args)
 
 } // namespace sf
 
-#endif // NEVERMORE_SINGLETON_H
+#endif // NEVERMORE_COMMON_SINGLETON_H

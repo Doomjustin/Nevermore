@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_CONTAINER_HEAP_H
-#define NEVERMORE_CONTAINER_HEAP_H
+#ifndef NEVERMORE_COMMON_HEAP_H
+#define NEVERMORE_COMMON_HEAP_H
 
 #include <vector>
 #include <algorithm>
@@ -74,4 +74,4 @@ using MaxHeap = BasicHeap<T, std::less<T>>;
 
 } // namespace sf
 
-#endif // NEVERMORE_CONTAINER_HEAP_H
+#endif // NEVERMORE_COMMON_HEAP_H

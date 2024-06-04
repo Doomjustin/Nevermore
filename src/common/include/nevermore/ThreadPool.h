@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_THREAD_POOL_H
-#define NEVERMORE_THREAD_POOL_H
+#ifndef NEVERMORE_COMMON_THREAD_POOL_H
+#define NEVERMORE_COMMON_THREAD_POOL_H
 
 #include <thread>
 #include <future>
@@ -66,4 +66,4 @@ private:
 
 } // namespace sf
 
-#endif // NEVERMORE_THREAD_POOL_H
+#endif // NEVERMORE_COMMON_THREAD_POOL_H

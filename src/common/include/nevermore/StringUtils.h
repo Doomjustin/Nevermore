@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_STRING_UTILS_H
-#define NEVERMORE_STRING_UTILS_H
+#ifndef NEVERMORE_COMMON_STRING_UTILS_H
+#define NEVERMORE_COMMON_STRING_UTILS_H
 
 #include <string>
 #include <string_view>
@@ -60,4 +60,4 @@ std::basic_string_view<Char, CharT> trim(std::basic_string_view<Char, CharT> str
 
 } // namespace sf
 
-#endif // NEVERMORE_STRING_UTILS_H
+#endif // NEVERMORE_COMMON_STRING_UTILS_H

@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_TIMER_H
-#define NEVERMORE_TIMER_H
+#ifndef NEVERMORE_COMMON_TIMER_H
+#define NEVERMORE_COMMON_TIMER_H
 
 #include <functional>
 #include <chrono>
@@ -145,4 +145,4 @@ using TimerManager = BasicTimerManager<std::chrono::steady_clock, std::chrono::n
 
 } // namespace sf
 
-#endif // NEVERMORE_TIMER_H
+#endif // NEVERMORE_COMMON_TIMER_H

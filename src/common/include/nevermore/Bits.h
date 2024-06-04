@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_BITS_H
-#define NEVERMORE_BITS_H
+#ifndef NEVERMORE_COMMON_BITS_H
+#define NEVERMORE_COMMON_BITS_H
 
 #include <type_traits>
 
@@ -21,4 +21,4 @@ consteval T right_shift(T n, T base = 1)
 
 } // namespace sf::bits
 
-#endif // NEVERMORE_BITS_H
+#endif // NEVERMORE_COMMON_BITS_H
