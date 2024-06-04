@@ -1,13 +1,13 @@
 add_library(nevermore_common OBJECT
-    include/Bits.h
-    include/EnumOperator.h
-    include/FunctorWrapper.h
-    include/Heap.h
-    include/Noncopyable.h
-    include/Singleton.h
-    include/StringUtils.h
-    include/ThreadPool.h
-    include/Timer.h
+    include/nevermore/Bits.h
+    include/nevermore/EnumOperator.h
+    include/nevermore/FunctorWrapper.h
+    include/nevermore/Heap.h
+    include/nevermore/Noncopyable.h
+    include/nevermore/Singleton.h
+    include/nevermore/StringUtils.h
+    include/nevermore/ThreadPool.h
+    include/nevermore/Timer.h
     ThreadPool.cpp
 )
 
