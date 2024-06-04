@@ -1,0 +1,13 @@
+#ifndef DOOM_BUILD_INFO_H
+#define DOOM_BUILD_INFO_H
+
+namespace sf {
+
+static constexpr const char* CommitSHA = "@COMMIT_SHA@";
+static constexpr const char* Timestamp = "@TIMESTAMP@";
+static constexpr const char* Version = "@PROJECT_VERSION@";
+static constexpr const char* ProjectDir = "@PROJECT_SOURCE_DIR@";
+
+} // namespace sf
+
+#endif // DOOM_BUILD_INFO_H
