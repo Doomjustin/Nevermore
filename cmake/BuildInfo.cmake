@@ -16,5 +16,5 @@ configure_file(
 )
 
 function(sf_build_info target)
-    target_include_directories(${target} INTERFACE ${DESTINATION})
+    target_include_directories(${target} PUBLIC ${DESTINATION})
 endfunction()
