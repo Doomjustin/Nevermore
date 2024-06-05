@@ -18,6 +18,3 @@ target_link_libraries(calc_shared calc_obj)
 
 add_library(calc_static STATIC)
 target_link_libraries(calc_static calc_obj)
-
-include(Doxygen)
-doxygen(calc doc/calc)
