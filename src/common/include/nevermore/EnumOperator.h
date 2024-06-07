@@ -18,8 +18,15 @@ struct is_scoped_enum: std::bool_constant<requires
 template< class T >
 inline constexpr bool is_scoped_enum_v = is_scoped_enum<T>::value;
 
+/**
+ * @brief Converts an enumeration to its underlying type. 
+ * 
+ * @tparam Enum enumeration type
+ * @param e enumeration value to convert
+ * @return constexpr std::underlying_type_t<Enum> The integer value of the underlying type of Enum, converted from e
+ */
 template<typename Enum>
-requires is_scoped_enum_v<Enum>
+    requires is_scoped_enum_v<Enum>
 constexpr std::underlying_type_t<Enum> to_underlying(Enum e) noexcept
 {
     return static_cast<std::underlying_type_t<Enum>>(e);
