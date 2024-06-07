@@ -1,3 +1,5 @@
+include(AddPyBind11)
+
 add_library(calc_obj OBJECT
     include/calc/calc.h
     calc.cpp
@@ -18,3 +20,13 @@ target_link_libraries(calc_shared calc_obj)
 
 add_library(calc_static STATIC)
 target_link_libraries(calc_static calc_obj)
+
+pybind11_add_module(example add.cpp)
+
+set_target_properties(example PROPERTIES
+    POSITION_INDEPENDENT_CODE 1
+)
+
+target_compile_definitions(example PRIVATE 
+    VERSION_INFO=${PROJECT_VERSION}
+)
