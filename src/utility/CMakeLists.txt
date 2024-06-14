@@ -5,7 +5,6 @@ add_library(nevermore_utility OBJECT
     include/nevermore/EnumOperator.h
     include/nevermore/Heap.h
     include/nevermore/Log.h
-    include/nevermore/Memory.h
     include/nevermore/Noncopyable.h
     include/nevermore/Singleton.h
     include/nevermore/StringUtils.h
