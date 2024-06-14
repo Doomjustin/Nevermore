@@ -1,7 +1,6 @@
 include(AddFmt)
 
-add_subdirectory(common)
+add_subdirectory(utility)
 add_subdirectory(calc)
 add_subdirectory(calc_console)
-add_subdirectory(log)
-add_subdirectory(database)
+add_subdirectory(leveldb)

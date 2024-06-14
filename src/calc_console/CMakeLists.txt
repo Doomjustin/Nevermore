@@ -14,8 +14,10 @@ target_link_libraries(calc_console_static PUBLIC
     ftxui::screen
     ftxui::dom
     ftxui::component
-    nevermore_common
 )
+
+include(BuildInfo)
+sf_build_info(calc_console_static)
 
 add_executable(calc_console bootstrap.cpp)
 target_link_libraries(calc_console PRIVATE calc_console_static)

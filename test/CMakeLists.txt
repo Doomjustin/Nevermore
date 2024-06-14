@@ -1,5 +1,4 @@
 include(Testing)
 
-add_subdirectory(common)
-add_subdirectory(log)
-add_subdirectory(database)
+add_subdirectory(utility)
+add_subdirectory(leveldb)
