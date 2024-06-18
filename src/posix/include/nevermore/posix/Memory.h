@@ -1,5 +1,5 @@
-#ifndef NEVERMORE_UTILITY_MEMORY_H
-#define NEVERMORE_UTILITY_MEMORY_H
+#ifndef NEVERMORE_POSIX_MEMORY_H
+#define NEVERMORE_POSIX_MEMORY_H
 
 #include <cstddef>
 #include <memory>
@@ -9,7 +9,7 @@
 #include <unistd.h>
 #include <fcntl.h>
 
-namespace sf {
+namespace sf::posix {
 
 namespace details {
 
@@ -110,6 +110,6 @@ auto mmap_unique_client()
     throw std::bad_alloc{};
 }
 
-} // namespace sf
+} // namespace sf::posix
 
-#endif // NEVERMORE_UTILITY_MEMORY_H
+#endif // NEVERMORE_POSIX_MEMORY_H
