@@ -1,55 +1,51 @@
-#ifndef NEVERMORE_DATABASE_DATABASE_H
-#define NEVERMORE_DATABASE_DATABASE_H
+#ifndef NEVERMORE_LEVELDB_DATABASE_H
+#define NEVERMORE_LEVELDB_DATABASE_H
 
-#include <string_view>
+#include <deque>
+#include <mutex>
 #include <string>
+#include <string_view>
+#include <condition_variable>
 
-#include "Status.h"
-#include "Option.h"
 #include "WriteBatch.h"
 
 namespace sf {
 
-class Snapshot {
+class Database {
 public:
-    virtual ~Snapshot() = default;
-};
-
-struct Range {
-    Range() = default;
-    Range(std::string_view s, std::string l)
-      : start{ s }, limit{ l }
-    {}
-
-    std::string_view start;
-    std::string limit;
-};
-
-class LevelDB {
+    using SizeType = typename WriteBatch::SizeType;
+    
 public:
-    static Status open(const Options& options, const std::string& name, LevelDB** dbptr);
+    void put(std::string_view key, std::string_view value);
 
-    LevelDB() = default;
+    void erase(std::string_view key);
 
-    LevelDB(const LevelDB&) = delete;
-    LevelDB& operator=(const LevelDB&) = delete;
+    std::string_view get(std::string_view key) const;
 
-    ~LevelDB() = default;
-
-    Status put(const WriteOption& options, std::string_view key, std::string_view value);
-    Status remove(const WriteOption& options, std::string_view key);
-    Status write(const WriteOption& options, const WriteBatch& batch);
-    Status get(const ReadOption& options, std::string_view key, std::string_view& value);
+    void write(WriteBatch batch);
 
 private:
-    struct Writer;
-
-    struct ManualCompaction {
-        int level;
+    struct Writer {
+        WriteBatch batch;
+        bool sync;
         bool done;
+        std::condition_variable cv;
     };
+
+private:
+    std::string name_;
+    std::mutex m_;
+    std::condition_variable ready_to_write_;
+    std::deque<Writer*> writers_;
+
+    constexpr bool is_first_writer(const Writer* writer) const noexcept
+    {
+        return !writer->done && writer == writers_.front();
+    }
+
+    std::pair<WriteBatch, Writer*> build_batch_group(Writer& writer);
 };
 
 } // namespace sf
 
-#endif // NEVERMORE_DATABASE_DATABASE_H
+#endif // NEVERMORE_LEVELDB_DATABASE_H

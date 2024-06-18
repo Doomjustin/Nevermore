@@ -1,76 +1,98 @@
-#ifndef NEVERMORE_DATABASE_WRITE_BATCH_H
-#define NEVERMORE_DATABASE_WRITE_BATCH_H
+#ifndef NEVERMORE_LEVELDB_WRITE_BATCH_H
+#define NEVERMORE_LEVELDB_WRITE_BATCH_H
 
+#include "Varint.h"
+#include <cstdint>
+#include <ostream>
 #include <string>
 #include <string_view>
-
-#include "Status.h"
+#include <vector>
 
 namespace sf {
 
-class WriteBatch {
-friend class WriteBatchInternal;
+enum class ValueType: std::uint8_t {
+    Value,
+    Deletion
+};
 
+/**
+ * @brief 一条数据
+ * 
+ */
+class Record {
+friend std::ostream& operator<<(std::ostream& os, const Record& record);
+    
 public:
-    struct Handler {
-        virtual ~Handler() = default;
-        virtual void put(const std::string_view key, const std::string_view value) = 0;
-        virtual void remove(const std::string_view key) = 0;
-    };
+    Record(std::string_view key);
+    Record(std::string_view key, std::string_view value);
 
-    WriteBatch();
+    Varint<std::uint32_t> length() const noexcept { return Varint{ static_cast<std::uint32_t>(value_.size()) }; }
+    std::string_view value() const noexcept { return value_; }
 
-    WriteBatch(const WriteBatch&) = default;
-    WriteBatch& operator=(const WriteBatch&) = default;
+private:    
+    ValueType type_;
+    std::string value_;              /// 实际存储的值，根据type不同，Deletion时只存储key，Value时存储key + value
+};
 
-    ~WriteBatch() = default;
+
+/**
+ * @brief DB一次存储的最小单位
+ *
+ * header :=
+ *     SequenceNumber: uint64_t
+ *     Count: uint32_t
+ * records :=
+ *     vector<Record>
+ */
+class WriteBatch {
+    /**
+     * @brief 将batch里的内容写入os
+     *
+     * 其输出为二进制且varint也被正确编码
+     * 
+     * @param os 
+     * @param batch 
+     * @return std::ostream& 
+     */
+    friend std::ostream& operator<<(std::ostream& os, const WriteBatch& batch);
+    
+public:
+    using SizeType = std::uint32_t;
+    using SequenceNumberType = std::uint64_t;
+
+    constexpr SizeType size() const noexcept { return records_.size(); }
+    SizeType decode_size() const noexcept;
+    
+    /**
+     * @brief 移除key对应的record
+     *
+     * 不会物理删除数据，只是添加一条标记为deletion的新数据
+     * 
+     * @param key 
+     */
+    void erase(std::string_view key);
 
     /**
-     * @brief Store the mapping "key->value" in the database.
+     * @brief 添加新数据
+     *
+     * 如果已经存在相同key的数据，也不会覆盖，而是追加一条新的数据
      * 
      * @param key 
      * @param value 
      */
-    void put(const std::string_view key, const std::string_view value);
+    void add(std::string_view key, std::string_view value);
 
-    /**
-     * @brief If the database contains a mapping for "key", erase it.  Else do nothing.
-     * 
-     * @param key 
-     */
-    void remove(const std::string_view key);
+    WriteBatch& operator+=(const WriteBatch& other);
 
-    /**
-     * @brief Clear all updates buffered in this batch.
-     * 
-     */
-    void clear();
-
-    /**
-     * @brief The size of the database changes caused by this batch.
-     * @details This number is tied to implementation details, and may change across releases.
-     * It is intended for LevelDB usage metrics.
-     * 
-     * @return std::size_t 
-     */
-    std::size_t approximate_size();
-
-    /**
-     * @brief Copies the operations in "source" to this batch.
-     * @details This runs in O(source size) time. However, the constant factor is better
-     * than calling Iterate() over the source batch with a Handler that replicates the operations into this batch.
-     * 
-     * @param other 
-     */
-    void append(const WriteBatch& other);
-
-    Status iterator(Handler* handler) const;
+    void sequence_number(SequenceNumberType number) noexcept { sequence_number_ = number; }
+    constexpr SequenceNumberType sequence_number() const noexcept { return sequence_number_; }
 
 private:
-
-    std::string rep_;
+    // TODO: sequence number要怎么确定
+    SequenceNumberType sequence_number_ = 0;   /// 每一个write_batch的sequence_number必须是唯一的
+    std::vector<Record> records_;
 };
 
 } // namespace sf
 
-#endif // NEVERMORE_DATABASE_WRITE_BATCH_H
+#endif // NEVERMORE_LEVELDB_WRITE_BATCH_H
